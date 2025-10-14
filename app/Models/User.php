@@ -33,6 +33,16 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function isPetani()
+    {
+        return $this->role === 'petani';
+    }
+
+    public function isPembeli()
+    {
+        return $this->role === 'pembeli';
+    }
+
     /**
      * Get the attributes that should be cast.
      *

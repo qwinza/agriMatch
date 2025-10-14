@@ -1,0 +1,16 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #DAD7CD;
+}
+
+.navbar {
+    background-color: #DAD7CD;
+    padding: 10px;
+}
+
+.navbar a, .navbar button {
+    color: black;
+    margin: 0 10px;
+    text-decoration: none;
+}

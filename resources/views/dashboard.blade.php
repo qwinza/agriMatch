@@ -1,38 +1,60 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5 text-center">
-    <h1 class="fw-bold mb-3">🌾 Selamat Datang di <span class="text-success">AgriMatch</span></h1>
-    <p class="lead mb-4">
-        Platform penghubung antara <strong>Petani</strong> dan <strong>Pembeli</strong> untuk hasil pertanian yang berkelanjutan.
-    </p>
+    <!-- Hero Section -->
+    <section id="beranda" class="relative bg-cover bg-center h-screen flex items-start"
+        style="background-image: url('{{ asset('images/bg-landing.jpg') }}'); background-size: cover; background-position: center;">
 
-    @guest
-        <a href="{{ route('login') }}" class="btn btn-success me-2">Masuk</a>
-        <a href="{{ route('register') }}" class="btn btn-outline-success">Daftar</a>
-    @endguest
+        <!-- Gunakan padding yang sama dengan navbar -->
+        <div class="container mx-auto px-4 md:px-6 lg:px-6 pt-80">
+            <div class="max-w-2xl text-white">
+                <h1 class="text-4xl md:text-5xl font-extrabold leading-snug mb-4 text-left">
+                    Hubungkan <span class="text-green-400">Petani</span> &
+                    <span class="text-green-400">Pembeli</span><br>
+                    dengan Cara yang <span class="text-green-400">Mudah</span>
+                </h1>
 
-    <hr class="my-5">
+                <p class="text-lg text-gray-100 max-w-xl mb-8 text-left">
+                    AgriMatch adalah platform digital yang mempertemukan petani dan pembeli secara langsung,
+                    mendukung perdagangan hasil pertanian yang efisien, adil, dan berkelanjutan 🌱
+                </p>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card shadow-sm p-4">
-                <h4>👨‍🌾 Untuk Petani</h4>
-                <p>Jual hasil panenmu langsung ke pembeli, tanpa perantara.</p>
+                <a href="{{ route('register') }}"
+                    class="bg-green-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-green-600 transition">
+                    Mulai Sekarang
+                </a>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm p-4">
-                <h4>🛒 Untuk Pembeli</h4>
-                <p>Beli produk segar langsung dari petani terpercaya.</p>
+    </section>
+
+
+    <!-- Tentang -->
+    <section id="tentang" class="py-20 px-8 text-center bg-[#f8f8f8]">
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">Tentang AgriMatch</h2>
+        <p class="max-w-3xl mx-auto text-gray-600">
+            Kami membantu petani memasarkan hasil panen mereka langsung kepada pembeli,
+            tanpa perantara dan dengan transparansi harga.
+            Dengan sistem berbasis data, kami memastikan rantai pasok pertanian berjalan lebih efisien
+            sekaligus menguntungkan semua pihak.
+        </p>
+    </section>
+
+    <!-- Fitur -->
+    <section id="fitur" class="py-20 px-8 bg-[#f5f3ee] text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-10">Fitur Utama</h2>
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-2 text-green-700">📦 Marketplace Pertanian</h3>
+                <p class="text-gray-600">Jual dan beli hasil pertanian dengan mudah langsung dari petani ke pembeli.</p>
+            </div>
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-2 text-green-700">📈 Analisis Data</h3>
+                <p class="text-gray-600">Pantau harga pasar, tren permintaan, dan hasil panen melalui data real-time.</p>
+            </div>
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-2 text-green-700">🤝 Konektivitas Langsung</h3>
+                <p class="text-gray-600">Bangun hubungan bisnis jangka panjang antara petani dan pembeli terpercaya.</p>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm p-4">
-                <h4>🌍 Misi Kami</h4>
-                <p>Membangun rantai pasok pertanian yang adil dan berkelanjutan.</p>
-            </div>
-        </div>
-    </div>
-</div>
+    </section>
 @endsection
