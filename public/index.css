@@ -9,8 +9,14 @@ body {
     padding: 10px;
 }
 
-.navbar a, .navbar button {
+.navbar a,
+.navbar button {
     color: black;
     margin: 0 10px;
     text-decoration: none;
+}
+
+#map {
+    height: 500px;
+    width: 100%;
 }

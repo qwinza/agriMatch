@@ -17,9 +17,7 @@ return new class extends Migration {
             $table->string('password')->nullable();
             $table->string('google_id')->nullable();
             $table->string('avatar')->nullable();
-            $table->enum('role', ['buyer', 'farmer'])->default('buyer');
-            $table->string('google_id')->nullable();
-            $table->string('avatar')->nullable();
+            $table->enum('role', ['pembeli', 'petani'])->default('pembeli');
             $table->timestamps();
         });
     }
