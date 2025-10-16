@@ -134,31 +134,56 @@
 </section>
 
 <!-- MENGAPA -->
-<section id="kenapa" class="py-24 bg-gradient-to-b from-green-50 via-white to-green-100 text-center">
-   <div class="max-w-6xl mx-auto px-6">
-        <h2 class="text-4xl font-bold text-gray-800 mb-12">
+<!-- MENGAPA -->
+<section id="kenapa" class="relative py-24 bg-gradient-to-b from-green-50 via-white to-green-100 overflow-hidden">
+    <!-- Elemen dekoratif blur agar senada dengan bagian 'Tentang' -->
+    <div class="absolute top-0 left-0 w-40 h-40 bg-green-200 rounded-full opacity-30 blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-52 h-52 bg-green-300 rounded-full opacity-20 blur-3xl animate-pulse delay-700"></div>
+
+    <div class="relative max-w-6xl mx-auto px-6">
+        <h2 class="text-4xl font-bold text-green-800 text-center mb-12">
             Mengapa Memilih <span class="text-green-600">AgriMatch?</span>
         </h2>
-        <div class="grid md:grid-cols-3 gap-10">
-            @foreach([
-                    ['fair-price.jpg', 'Harga Adil', 'Petani menerima harga yang pantas tanpa potongan perantara.'],
-                    ['easy-access.jpg', 'Akses Mudah', 'Platform dapat diakses kapan saja dari perangkat apa pun.'],
-                    ['sustain.jpg', 'Berkelanjutan', 'Mendukung pertanian ramah lingkungan dan distribusi efisien.']
-                ] as [$img, $title, $desc])
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 group">
-                    <div class="h-40 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-                         style="background-image: url('{{ asset('images/' . $img) }}');"></div>
-                    <div class="p-6">
-                        <h4 class="font-semibold text-lg text-green-700 mb-2">{{ $title }}</h4>
-                        <p class="text-gray-600">{{ $desc }}</p>
-                    </div>
+
+        {{-- Data disesuaikan untuk fitur Marketplace AgriMatch --}}
+        @php
+            $dataCards = [
+                ['marketplace', 'Transaksi Langsung & Transparan', 
+                 'Petani menjual langsung ke pembeli tanpa perantara. Harga yang ditampilkan adalah harga final, memastikan keadilan bagi petani dan harga terbaik bagi pembeli.'],
+                ['fair-price', 'Akses Harga Pasar yang Adil', 
+                 'Pantau data harga komoditas terkini secara real-time. Membantu petani menentukan harga jual yang kompetitif dan menguntungkan.'],
+                ['logistic', 'Logistik Terintegrasi & Efisien', 
+                 'Pilihan pengiriman yang terpercaya dan terintegrasi, memastikan hasil panen sampai di tujuan dalam kondisi terbaik dan tepat waktu.'],
+                ['community', 'Komunitas & Dukungan Petani', 
+                 'Bergabung dengan jaringan petani dan pembeli yang luas untuk berbagi wawasan, tren pasar, dan praktik pertanian berkelanjutan.']
+            ];
+        @endphp
+
+        @foreach($dataCards as $index => [$img, $title, $desc])
+            @php
+                $isReversed = $index % 2 != 0;
+                $imageRoundedClass = $isReversed ? 'md:rounded-l-2xl' : 'md:rounded-r-2xl';
+            @endphp
+
+            <div class="bg-white rounded-2xl shadow-xl mb-10 flex flex-col md:flex-row items-stretch overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl {{ $isReversed ? 'md:flex-row-reverse' : '' }}">
+                <div class="w-full md:w-5/12 relative">
+                    <img 
+                        src="{{ asset('images/' . $img . '.jpg') }}" 
+                        alt="{{ $title }}" 
+                        class="h-64 md:h-full w-full object-cover {{ $imageRoundedClass }}">
                 </div>
-            @endforeach
-        </div>
+                <div class="w-full md:w-7/12 p-8 flex flex-col justify-center text-left bg-white">
+                    <p class="text-sm text-green-500 font-semibold mb-2">Mengapa AgriMatch?</p>
+                    <h4 class="text-2xl font-bold text-gray-800 mb-4">{{ $title }}</h4>
+                    <p class="text-gray-600 leading-relaxed">{{ $desc }}</p>
+                </div>
+            </div>
+        @endforeach
     </div>
 </section>
 
-<!-- CTA -->
+
+
 <section id="kontak" class="py-24 bg-gradient-to-r from-green-600 to-green-500 text-white text-center">
     <h2 class="text-4xl font-bold mb-4">Siap Bergabung dengan <span class="text-white">AgriMatch?</span></h2>
     <p class="mb-8 text-lg text-green-100">Bangun koneksi dan transaksi langsung antara petani & pembeli. 🌾</p>
