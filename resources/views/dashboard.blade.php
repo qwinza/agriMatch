@@ -2,7 +2,6 @@
 
 @section('content')
 
-<!-- HERO SECTION -->
 <section id="beranda" class="relative h-screen flex items-center bg-cover bg-center"
     style="background-image: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('{{ asset('images/bg-landing.jpg') }}');">
     <div class="container mx-auto px-6 md:px-12 lg:px-16">
@@ -18,13 +17,12 @@
             </p>
             <a href="{{ route('register') }}"
                 class="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-3 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
-                Mulai Sekarang
+                Mulai Sekarang  
             </a>
         </div>
     </div>
 </section>
 
-<!-- TENTANG -->
 <section id="tentang" class="relative py-28 bg-gradient-to-b from-green-50 via-white to-green-100 overflow-hidden">
     <div class="absolute top-0 left-0 w-40 h-40 bg-green-200 rounded-full opacity-30 blur-3xl animate-pulse"></div>
     <div class="absolute bottom-0 right-0 w-52 h-52 bg-green-300 rounded-full opacity-20 blur-3xl animate-pulse delay-700"></div>
@@ -64,8 +62,7 @@
     </div>
 </section>
 
-<!-- FITUR UTAMA -->
-<section class="py-20 bg-gradient-to-b from-green-100 via-white to-green-50 text-center">
+<section id="fitur" class="py-20 bg-gradient-to-b from-green-100 via-white to-green-50 text-center">
     <div class="container">
         <h2 class="fw-bold mb-4 text-4xl text-gray-800">
             Fitur <span class="text-green-600">Utama</span>
@@ -122,8 +119,7 @@
     </div>
 </section>
 
-<!-- PETA -->
-<section class="py-20 text-center bg-gradient-to-b from-white to-green-50">
+<section id="peta" class="py-20 text-center bg-gradient-to-b from-white to-green-50">
     <div class="container">
         <h2 class="text-4xl font-bold text-gray-800 mb-6">
             Sebaran <span class="text-green-600">Petani</span>
@@ -133,8 +129,6 @@
     </div>
 </section>
 
-<!-- MENGAPA -->
-<!-- MENGAPA -->
 <section id="kenapa" class="relative py-24 bg-gradient-to-b from-green-50 via-white to-green-100 overflow-hidden">
     <!-- Elemen dekoratif blur agar senada dengan bagian 'Tentang' -->
     <div class="absolute top-0 left-0 w-40 h-40 bg-green-200 rounded-full opacity-30 blur-3xl animate-pulse"></div>
@@ -145,7 +139,6 @@
             Mengapa Memilih <span class="text-green-600">AgriMatch?</span>
         </h2>
 
-        {{-- Data disesuaikan untuk fitur Marketplace AgriMatch --}}
         @php
             $dataCards = [
                 ['marketplace', 'Transaksi Langsung & Transparan', 
@@ -184,13 +177,53 @@
 
 
 
-<section id="kontak" class="py-24 bg-gradient-to-r from-green-600 to-green-500 text-white text-center">
-    <h2 class="text-4xl font-bold mb-4">Siap Bergabung dengan <span class="text-white">AgriMatch?</span></h2>
-    <p class="mb-8 text-lg text-green-100">Bangun koneksi dan transaksi langsung antara petani & pembeli. 🌾</p>
-    <a href="{{ route('register') }}"
-        class="bg-white text-green-700 font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-gray-100 transition-all duration-300">
-        Daftar Sekarang
-    </a>
+<section id="kontak" class="py-24 bg-gradient-to-r from-green-500 via-emerald-500 to-lime-400 text-white text-center">
+    <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold mb-4">Siap Bergabung dengan <span class="text-white">AgriMatch?</span></h2>
+        <p class="mb-8 text-lg text-green-50">Bangun koneksi dan transaksi langsung antara petani & pembeli. 🌾</p>
+        <a href="{{ route('register') }}"
+            class="bg-white text-green-700 font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-gray-100 transition-all duration-300">
+            Daftar Sekarang
+        </a>
+    </div>
 </section>
+
+<footer class="bg-gradient-to-b from-lime-50 via-white to-green-100 text-gray-700 py-12">
+    <div class="max-w-6xl mx-auto px-6 md:px-12 lg:px-16 grid md:grid-cols-3 gap-8 text-center md:text-left">
+
+        <div>
+            <h3 class="text-2xl font-bold text-green-700 mb-3">🌱 AgriMatch</h3>
+            <p class="text-gray-600">
+                Menghubungkan petani dan pembeli di seluruh Indonesia melalui teknologi digital yang adil,
+                transparan, dan berkelanjutan.
+            </p>
+        </div>
+
+        <div>
+            <h4 class="text-xl font-semibold text-green-700 mb-3">Navigasi Cepat</h4>
+            <ul class="space-y-2">
+                <li><a href="#beranda" class="hover:text-green-600 transition">Beranda</a></li>
+                <li><a href="#tentang" class="hover:text-green-600 transition">Tentang</a></li>
+                <li><a href="#fitur" class="hover:text-green-600 transition">Fitur</a></li>
+                <li><a href="#peta" class="hover:text-green-600 transition">Peta</a></li>
+                <li><a href="#kontak" class="hover:text-green-600 transition">Kontak</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h4 class="text-xl font-semibold text-green-700 mb-3">Hubungi Kami</h4>
+            <ul class="space-y-2 text-gray-600">
+                <li>📍 Bandung, Indonesia</li>
+                <li>📞 +62 821 2151 8218</li>
+                <li>✉️ farisahmad1210@gmail.com</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="border-t border-green-200 mt-10 pt-6 text-center text-sm text-gray-500">
+        © 2025 <span class="text-green-700 font-semibold">AgriMatch</span>. Semua hak dilindungi.
+    </div>
+</footer>
+
 
 @endsection

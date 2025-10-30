@@ -80,7 +80,6 @@ class AuthController extends Controller
                 ->orWhere('email', $googleUser->getEmail())
                 ->first();
 
-            // Jika belum ada user, simpan data sementara di session
             if (!$user) {
                 session([
                     'google_user' => [
@@ -91,7 +90,6 @@ class AuthController extends Controller
                     ]
                 ]);
 
-                // Arahkan ke halaman pilih role
                 return redirect('/choose-role');
             }
 
@@ -102,7 +100,6 @@ class AuthController extends Controller
         }
     }
 
-    // === FORM PILIH ROLE ===
     public function showChooseRole()
     {
         if (!session()->has('google_user')) {
@@ -119,7 +116,6 @@ class AuthController extends Controller
 
         $googleUser = session('google_user');
 
-        // Simpan user baru ke database
         $user = User::create([
             'name' => $googleUser['name'],
             'email' => $googleUser['email'],

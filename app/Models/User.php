@@ -55,4 +55,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function produk()
+    {
+        return $this->hasMany(Produk::class);
+    }
+
+    // 🔹 Relasi ke alamat
+    public function alamat()
+    {
+        return $this->hasMany(Alamat::class);
+    }
 }

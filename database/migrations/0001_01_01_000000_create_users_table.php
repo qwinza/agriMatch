@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('google_id')->nullable();
             $table->string('avatar')->nullable();
             $table->enum('role', ['pembeli', 'petani'])->default('pembeli');
+            $table->string('remember_token', 100)->nullable(); 
             $table->timestamps();
         });
     }

@@ -6,55 +6,85 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ReportController;
 
 // =====================
-// 🏠 HALAMAN UTAMA (Guest)
+// 🏠 HALAMAN UTAMA
 // =====================
 Route::get('/', function () {
-    return view('dashboard'); // view: resources/views/dashboard.blade.php
+    return view('dashboard');
 })->name('home');
 
 // =====================
-// 🔐 AUTENTIKASI (AuthController tunggal)
+// 🔐 AUTENTIKASI
 // =====================
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+    
+    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('google.redirect');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+});
 
-Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('google.redirect');
-Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
-Route::get('/choose-role', [AuthController::class, 'showChooseRole']);
-Route::post('/choose-role', [AuthController::class, 'saveRole']);
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+// Role Selection
+Route::middleware('auth')->group(function () {
+    Route::get('/choose-role', [AuthController::class, 'showChooseRole'])->name('choose-role');
+    Route::post('/choose-role', [AuthController::class, 'saveRole']);
+});
 
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-
+// Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // =====================
-// 🧭 DASHBOARD BERDASARKAN ROLE
+// 🧭 DASHBOARD & AUTH ROUTES
 // =====================
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard utama (cek role user)
+    // Dashboard utama - redirect berdasarkan role
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Dashboard Petani
-    Route::get('/farmers/dashboard', [DashboardController::class, 'petani'])
-        ->middleware('role:petani')
-        ->name('farmers.dashboard');
+    Route::get('/farmers/dashboard', [DashboardController::class, 'petani'])->name('farmers.dashboard');
 
     // Dashboard Pembeli
-    Route::get('/buyers/dashboard', [DashboardController::class, 'pembeli'])
-        ->middleware('role:pembeli')
-        ->name('buyers.dashboard');
+    Route::get('/buyers/dashboard', [DashboardController::class, 'pembeli'])->name('buyers.dashboard');
 
-    // Produk CRUD (kecuali index & show)
-    Route::resource('products', ProductController::class);
+    // =====================
+    // 🛒 PRODUCT ROUTES - FIXED ORDER
+    // =====================
+    
+    // Routes TANPA parameter harus di ATAS
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::get('/my-products', [ProductController::class, 'myProducts'])->name('products.my-products');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    
+    // Routes DENGAN parameter harus di BAWAH
+    Route::get('/products/{encryptedId}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('/products/{encryptedId}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{encryptedId}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{encryptedId}', [ProductController::class, 'destroy'])->name('products.destroy');
 
-    // Pesanan
-    Route::post('products/{product}/order', [OrderController::class, 'store'])->name('products.order');
-    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+    // =====================
+    // 📦 ORDER ROUTES
+    // =====================
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    
+    Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::delete('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
-    // Review produk
-    Route::post('products/{product}/reviews', [ReviewController::class, 'store'])->name('products.reviews.store');
+    // =====================
+    // ⭐ REVIEW ROUTES
+    // =====================
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('products.reviews.store');
+
+    // =====================
+    // 📊 REPORT ROUTES
+    // =====================
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
 });

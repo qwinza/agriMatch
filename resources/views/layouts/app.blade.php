@@ -18,6 +18,21 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        /* NAVBAR STYLES */
+        #navbar {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .navbar-link {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        /* Ensure dropdown stays on top */
+        #dropdownMenu {
+            z-index: 1000;
+        }
+
+        /* Original styles */
         #map {
             width: 100%;
             height: 500px;
@@ -68,7 +83,115 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // ==== LEAFLET MAP ====
+            // ===== NAVBAR DROPDOWN & SCROLL FUNCTIONALITY =====
+            const dropdownTrigger = document.getElementById('dropdownTrigger');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const dropdownIcon = document.getElementById('dropdownIcon');
+            let isDropdownOpen = false;
+
+            // Dropdown functionality
+            if (dropdownTrigger && dropdownMenu && dropdownIcon) {
+                dropdownTrigger.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    isDropdownOpen = !isDropdownOpen;
+
+                    if (isDropdownOpen) {
+                        dropdownMenu.classList.remove('hidden');
+                        dropdownIcon.classList.add('rotate-180');
+                    } else {
+                        dropdownMenu.classList.add('hidden');
+                        dropdownIcon.classList.remove('rotate-180');
+                    }
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.add('hidden');
+                        dropdownIcon.classList.remove('rotate-180');
+                        isDropdownOpen = false;
+                    }
+                });
+
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape' && isDropdownOpen) {
+                        dropdownMenu.classList.add('hidden');
+                        dropdownIcon.classList.remove('rotate-180');
+                        isDropdownOpen = false;
+                    }
+                });
+
+                dropdownMenu.addEventListener('click', function (e) {
+                    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                        dropdownMenu.classList.add('hidden');
+                        dropdownIcon.classList.remove('rotate-180');
+                        isDropdownOpen = false;
+                    }
+                });
+            }
+
+            // ===== SCROLL FUNCTIONALITY FOR LANDING PAGE =====
+            @if(request()->is('/') && !request()->is('dashboard*', 'farmers*', 'buyers*', 'products*', 'orders*', 'petani*'))
+                const navbar = document.getElementById('navbar');
+                const navbarLinks = document.querySelectorAll('.navbar-link');
+                
+                function updateNavbarOnScroll() {
+                    if (window.scrollY > 50) {
+                        // Scrolled - white background
+                        navbar.classList.add('bg-white', 'text-gray-800', 'shadow-md');
+                        navbar.classList.remove('bg-transparent', 'text-white');
+                        
+                        // Update logo color
+                        const logo = navbar.querySelector('a[href="{{ route("home") }}"]');
+                        if (logo) {
+                            logo.classList.remove('text-green-400');
+                            logo.classList.add('text-green-600');
+                        }
+                        
+                        // Update all navbar links
+                        navbarLinks.forEach(link => {
+                            if (link.classList.contains('hover:text-green-400')) {
+                                link.classList.remove('hover:text-green-400');
+                                link.classList.add('hover:text-green-600');
+                            }
+                            if (link.classList.contains('text-green-400')) {
+                                link.classList.remove('text-green-400');
+                                link.classList.add('text-green-600');
+                            }
+                        });
+                    } else {
+                        // Top of page - transparent
+                        navbar.classList.add('bg-transparent', 'text-white');
+                        navbar.classList.remove('bg-white', 'text-gray-800', 'shadow-md');
+                        
+                        // Update logo color
+                        const logo = navbar.querySelector('a[href="{{ route("home") }}"]');
+                        if (logo) {
+                            logo.classList.remove('text-green-600');
+                            logo.classList.add('text-green-400');
+                        }
+                        
+                        // Update all navbar links
+                        navbarLinks.forEach(link => {
+                            if (link.classList.contains('hover:text-green-600')) {
+                                link.classList.remove('hover:text-green-600');
+                                link.classList.add('hover:text-green-400');
+                            }
+                            if (link.classList.contains('text-green-600') && !link.classList.contains('font-semibold')) {
+                                link.classList.remove('text-green-600');
+                                link.classList.add('text-white');
+                            }
+                        });
+                    }
+                }
+
+                // Initial check
+                updateNavbarOnScroll();
+
+                // Listen to scroll events
+                window.addEventListener('scroll', updateNavbarOnScroll);
+            @endif
+
+            // ===== ORIGINAL MAP & SWIPER CODE =====
             const mapContainer = document.getElementById('map');
             if (mapContainer) {
                 const map = L.map('map').setView([-2.5489, 118.0149], 5);
@@ -89,7 +212,6 @@
                 });
             }
 
-            // ==== SWIPER CAROUSEL ====
             const swiperContainer = document.querySelector('.swiper');
             if (swiperContainer) {
                 new Swiper('.swiper', {
@@ -119,5 +241,4 @@
     </script>
 
 </body>
-
 </html>
