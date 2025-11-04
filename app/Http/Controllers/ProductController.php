@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Crypt;
 
 class ProductController extends Controller
 {
-    // Menampilkan semua produk untuk pembeli (public)
     public function index()
     {
         $products = Produk::with('user')
@@ -18,10 +17,9 @@ class ProductController extends Controller
             ->latest()
             ->paginate(12);
 
-        return view('produk.index', compact('products')); // Public view
+        return view('farmers.produk.index', compact('products')); // Public view
     }
 
-    // Menampilkan produk milik petani
     public function myProducts()
     {
         $products = Produk::where('user_id', Auth::id())
@@ -42,7 +40,7 @@ class ProductController extends Controller
             $id = Crypt::decrypt($encryptedId);
             $product = Produk::with('user')->findOrFail($id);
 
-            return view('produk.show', compact('product')); // Public view
+            return view('farmers.produk.show', compact('product')); // Public view
 
         } catch (\Exception $e) {
             abort(404, 'Produk tidak ditemukan.');
