@@ -75,6 +75,41 @@ class DashboardController extends Controller
     public function pembeli()
     {
         $user = Auth::user();
-        return view('buyers.dashboard', compact('user'));
+
+        // Hitung statistik pesanan
+        $totalOrders = Order::where('user_id', $user->id)->count();
+        $pendingOrders = Order::where('user_id', $user->id)->where('status', 'pending')->count();
+        $activeOrders = Order::where('user_id', $user->id)
+            ->whereIn('status', ['confirmed', 'processing', 'shipped'])
+            ->count();
+        $processingOrders = Order::where('user_id', $user->id)->where('status', 'processing')->count();
+        $shippedOrders = Order::where('user_id', $user->id)->where('status', 'shipped')->count();
+        $completedOrders = Order::where('user_id', $user->id)->where('status', 'completed')->count();
+        $cancelledOrders = Order::where('user_id', $user->id)->where('status', 'cancelled')->count();
+
+        // Hitung total belanja (hitung dari orders yang completed)
+        $totalSpending = Order::where('user_id', $user->id)
+            ->whereIn('status', ['confirmed', 'completed', 'success']) // Status yang dianggap sukses
+            ->sum('total_price');
+
+        // Ambil pesanan terbaru
+        $recentOrders = Order::where('user_id', $user->id)
+            ->with('product')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('buyers.dashboard', compact(
+            'user',
+            'totalOrders',
+            'pendingOrders',
+            'activeOrders',
+            'processingOrders',
+            'shippedOrders',
+            'completedOrders',
+            'cancelledOrders',
+            'totalSpending',
+            'recentOrders'
+        ));
     }
 }

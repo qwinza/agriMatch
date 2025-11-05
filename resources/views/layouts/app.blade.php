@@ -14,6 +14,7 @@
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <!-- Midtrans Snap.js -->
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -22,11 +23,11 @@
         #navbar {
             transition: all 0.3s ease-in-out;
         }
-        
+
         .navbar-link {
             transition: all 0.2s ease-in-out;
         }
-        
+
         /* Ensure dropdown stays on top */
         #dropdownMenu {
             z-index: 1000;
@@ -133,20 +134,20 @@
             @if(request()->is('/') && !request()->is('dashboard*', 'farmers*', 'buyers*', 'products*', 'orders*', 'petani*'))
                 const navbar = document.getElementById('navbar');
                 const navbarLinks = document.querySelectorAll('.navbar-link');
-                
+
                 function updateNavbarOnScroll() {
                     if (window.scrollY > 50) {
                         // Scrolled - white background
                         navbar.classList.add('bg-white', 'text-gray-800', 'shadow-md');
                         navbar.classList.remove('bg-transparent', 'text-white');
-                        
+
                         // Update logo color
                         const logo = navbar.querySelector('a[href="{{ route("home") }}"]');
                         if (logo) {
                             logo.classList.remove('text-green-400');
                             logo.classList.add('text-green-600');
                         }
-                        
+
                         // Update all navbar links
                         navbarLinks.forEach(link => {
                             if (link.classList.contains('hover:text-green-400')) {
@@ -162,14 +163,14 @@
                         // Top of page - transparent
                         navbar.classList.add('bg-transparent', 'text-white');
                         navbar.classList.remove('bg-white', 'text-gray-800', 'shadow-md');
-                        
+
                         // Update logo color
                         const logo = navbar.querySelector('a[href="{{ route("home") }}"]');
                         if (logo) {
                             logo.classList.remove('text-green-600');
                             logo.classList.add('text-green-400');
                         }
-                        
+
                         // Update all navbar links
                         navbarLinks.forEach(link => {
                             if (link.classList.contains('hover:text-green-600')) {
@@ -241,4 +242,5 @@
     </script>
 
 </body>
+
 </html>

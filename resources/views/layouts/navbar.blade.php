@@ -27,9 +27,6 @@
           <li><a href="{{ route('orders.index') }}"
               class="navbar-link hover:text-green-600 font-medium transition-colors {{ request()->is('orders*') ? 'text-green-600 font-semibold' : '' }}">Pesanan</a>
           </li>
-          <li><a href="{{ route('reports.index') }}"
-              class="navbar-link hover:text-green-600 font-medium transition-colors {{ request()->is('reports*') ? 'text-green-600 font-semibold' : '' }}">Laporan</a>
-          </li>
         @elseif(auth()->user()->role === 'pembeli')
           <!-- Menu Pembeli -->
           <li><a href="{{ route('buyers.dashboard') }}"
@@ -41,7 +38,6 @@
           <li><a href="{{ route('orders.index') }}"
               class="navbar-link hover:text-green-600 font-medium transition-colors {{ request()->is('orders*') ? 'text-green-600 font-semibold' : '' }}">Pesanan
               Saya</a></li>
-          <li><a href="#" class="navbar-link hover:text-green-600 font-medium transition-colors">Favorit</a></li>
         @endif
       @else
         <!-- Menu untuk GUEST (belum login) -->
@@ -106,14 +102,6 @@
                   <i class="fas fa-shopping-cart mr-2 text-green-500"></i>Pesanan
                 </a>
               </li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-green-50 font-medium transition-colors">
-                  <i class="fas fa-chart-line mr-2 text-green-500"></i>Laporan & Analitik
-                </a>
-              </li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-green-50 font-medium transition-colors">
-                  <i class="fas fa-map-marker-alt mr-2 text-green-500"></i>Lokasi Toko
-                </a>
-              </li>
             @elseif(auth()->user()->role === 'pembeli')
               <li><a href="{{ route('buyers.dashboard') }}"
                   class="block px-4 py-2 hover:bg-blue-50 font-medium transition-colors">
@@ -128,10 +116,6 @@
               <li><a href="{{ route('orders.index') }}"
                   class="block px-4 py-2 hover:bg-blue-50 font-medium transition-colors">
                   <i class="fas fa-receipt mr-2 text-blue-500"></i>Pesanan Saya
-                </a>
-              </li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-blue-50 font-medium transition-colors">
-                  <i class="fas fa-heart mr-2 text-red-500"></i>Favorit
                 </a>
               </li>
             @endif

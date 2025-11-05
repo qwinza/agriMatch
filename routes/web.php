@@ -12,7 +12,6 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\CheckoutController;
 
-
 // =====================
 // 🏠 HALAMAN UTAMA
 // =====================
@@ -93,7 +92,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
 
-    // routes/web.php - Tambahkan dalam group buyer
+    // =====================
+    // 🛍️ BUYER ROUTES
+    // =====================
     Route::prefix('buyer')->name('buyer.')->middleware(['check.role:pembeli'])->group(function () {
 
         // Marketplace - lihat semua produk
@@ -112,26 +113,114 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/checkout/failed', [BuyerController::class, 'checkoutFailed'])->name('checkout.failed');
     });
 
+    // =====================
+    // 💳 TRANSACTION ROUTES - FIXED VERSION
+    // =====================
+    Route::prefix('transactions')->name('transactions.')->group(function () {
+        // Transaction creation and payment
+        Route::get('/create/{encryptedId}', [TransaksiController::class, 'create'])->name('create');
+        Route::post('/pay', [TransaksiController::class, 'pay'])->name('pay');
+        Route::post('/pay-auto-success', [TransaksiController::class, 'payAutoSuccess'])->name('pay.auto-success');
+        Route::get('/finish', [TransaksiController::class, 'finish'])->name('finish');
 
-    Route::middleware('auth')->group(function () {
-        Route::get('/products/{encryptedId}/buy', [TransaksiController::class, 'create'])->name('transactions.create');
-        Route::post('/transactions/pay', [TransaksiController::class, 'pay'])->name('transactions.pay');
-        Route::get('/transactions/finish', [TransaksiController::class, 'finish'])->name('transactions.finish');
+        // Order management
+        Route::get('/my-orders', [TransaksiController::class, 'myOrders'])->name('my-orders');
+        Route::get('/order-detail/{id}', [TransaksiController::class, 'orderDetail'])->name('order-detail');
+
+        // Payment status checking
+        Route::get('/check-payment-status/{orderCode}', [TransaksiController::class, 'checkPaymentStatus'])->name('check-payment-status');
+        Route::get('/sync-payment-status/{orderCode}', [TransaksiController::class, 'syncPaymentStatus'])->name('sync-payment-status');
     });
 
-    Route::middleware('auth')->group(function () {
-        Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-        Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-        Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+    // =====================
+    // 🔔 NOTIFICATION ROUTES
+    // =====================
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::patch('/{id}/read', [NotificationController::class, 'markAsRead'])->name('read');
+        Route::patch('/read-all', [NotificationController::class, 'markAllAsRead'])->name('readAll');
     });
 
-    Route::get('/checkout/{order}', [CheckoutController::class, 'show'])->name('checkout.show')->middleware('auth');
+    // =====================
+    // 🛒 CHECKOUT ROUTES
+    // =====================
+    Route::get('/checkout/{order}', [CheckoutController::class, 'show'])->name('checkout.show');
 
-    // Webhook Midtrans
+    // =====================
+    // 🔄 CALLBACK ROUTES (TANPA AUTH KARENA DIPANGGIL OLEH MIDTRANS)
+    // =====================
+    Route::post('/payment/callback', [TransaksiController::class, 'callback'])->name('payment.callback');
     Route::post('/checkout/callback', [CheckoutController::class, 'callback'])->name('checkout.callback');
 
+    // =====================
+    // 🧪 TESTING & DEBUG ROUTES
+    // =====================
+    Route::prefix('test')->name('test.')->group(function () {
+        Route::get('/callback', function () {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Callback URL is accessible',
+                'callback_url' => url('/payment/callback'),
+                'timestamp' => now()->toDateTimeString(),
+                'environment' => app()->environment()
+            ]);
+        })->name('callback');
 
+        Route::get('/callback-post', function () {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'POST callback URL is accessible',
+                'method' => 'POST'
+            ]);
+        })->name('callback-post');
 
+        Route::get('/ngrok-info', function () {
+            $ngrokUrl = \App\Helpers\NgrokHelper::getNgrokUrl();
 
+            return response()->json([
+                'ngrok_running' => !is_null($ngrokUrl),
+                'ngrok_url' => $ngrokUrl,
+                'app_url' => config('app.url'),
+                'environment' => app()->environment(),
+                'callback_url' => $ngrokUrl ? $ngrokUrl . '/payment/callback' : null,
+                'finish_url' => $ngrokUrl ? $ngrokUrl . '/transactions/finish' : null,
+                'server_time' => now()->toDateTimeString()
+            ]);
+        })->name('ngrok-info');
 
+        Route::get('/callback-manual', function () {
+            // Simulate callback data
+            $testData = [
+                'order_id' => 'TRX-1234567890-ABC123',
+                'transaction_status' => 'settlement',
+                'status_code' => '200',
+                'gross_amount' => '50000',
+                'signature_key' => 'test_signature',
+                'payment_type' => 'credit_card',
+                'transaction_id' => 'test_transaction_123'
+            ];
+
+            return response()->json([
+                'callback_test' => 'Manual test',
+                'expected_url' => url('/payment/callback'),
+                'test_data' => $testData
+            ]);
+        })->name('callback-manual');
+
+        // Debug route untuk order
+        Route::get('/debug/order/{id}', [TransaksiController::class, 'debugOrder'])->name('debug-order');
+    });
+
+});
+
+// =====================
+// 🌐 PUBLIC ROUTES (TANPA AUTH)
+// =====================
+Route::get('/products/public/{encryptedId}', [ProductController::class, 'showPublic'])->name('products.public.show');
+
+// =====================
+// 🚨 FALLBACK ROUTE
+// =====================
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
 });

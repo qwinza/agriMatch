@@ -63,19 +63,17 @@ class OrderController extends Controller
             $orders = Order::whereHas('product', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })->with(['product', 'user'])->latest()->paginate(10);
-        } else {
-            // Untuk pembeli: tampilkan pesanan mereka
-            $orders = Order::where('user_id', $user->id)
-                ->with([
-                    'product' => function ($query) {
-                        $query->with('user'); // Eager load petani
-                    }
-                ])
-                ->latest()
-                ->get();
-        }
 
-        return view('farmers.orders.index', compact('orders'));
+            return view('farmers.orders.index', compact('orders'));
+        } else {
+            // Untuk pembeli: tampilkan pesanan mereka - GUNAKAN PAGINATE
+            $orders = Order::where('user_id', $user->id)
+                ->with(['product.user'])
+                ->latest()
+                ->paginate(10); // ← PERBAIKI: ganti get() dengan paginate()
+
+            return view('farmers.orders.index', compact('orders'));
+        }
     }
 
     public function show($id)
@@ -92,7 +90,7 @@ class OrderController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        return view('orders.show', compact('order'));
+        return view('farmers.orders.show', compact('order'));
     }
 
     public function updateStatus(Request $request, $id)

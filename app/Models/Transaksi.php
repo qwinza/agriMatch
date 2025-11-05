@@ -21,4 +21,10 @@ class Transaksi extends Model
     {
         return $this->belongsTo(Produk::class, 'product_id');
     }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }
+
